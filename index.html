@@ -7,54 +7,59 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: #f8f9fa; color: #333; line-height: 1.6; }
-       
+      
         .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
-       
+      
         header { background: linear-gradient(135deg, #2E86DE, #1a6fc6); color: white; padding: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .header-content { display: flex; justify-content: center; align-items: center; }
         .logo { font-size: 1.8rem; font-weight: bold; display: flex; align-items: center; }
         .logo i { margin-right: 10px; font-size: 2rem; }
-       
+      
         .hero { background: white; padding: 40px 0; text-align: center; border-radius: 0 0 15px 15px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .hero h1 { font-size: 2rem; margin-bottom: 15px; color: #2c3e50; }
         .hero p { font-size: 1.1rem; color: #7f8c8d; max-width: 500px; margin: 0 auto; }
-       
+      
         .card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
         .card h2 { color: #2c3e50; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f1f2f6; text-align: center; }
-       
+      
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; }
         .form-control { width: 100%; padding: 12px 15px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; transition: border-color 0.3s; }
         .form-control:focus { border-color: #2E86DE; outline: none; }
         .form-control:invalid { border-color: #dc3545; }
-       
+      
         .btn { background: #2E86DE; color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; transition: background 0.3s; margin: 5px; }
         .btn:hover { background: #1a6fc6; }
         .btn:disabled { background: #6c757d; cursor: not-allowed; }
         .btn-location { background: #FF9F43; width: 100%; }
         .btn-location:hover { background: #FF8C29; }
-        .btn-submit { background: #10AC84; width: 100%; margin-top: 10px; }
-        .btn-submit:hover { background: #0D8C6B; }
-       
+        .btn-keldi { background: #10AC84; width: 48%; margin-top: 10px; }
+        .btn-keldi:hover { background: #0D8C6B; }
+        .btn-ketdi { background: #FF6B6B; width: 48%; margin-top: 10px; }
+        .btn-ketdi:hover { background: #FF5252; }
+        .btn-view-exit { background: #6C757D; width: 100%; margin-top: 10px; }
+        .btn-view-exit:hover { background: #5A6268; }
+      
         footer { background: #2c3e50; color: white; padding: 20px 0; margin-top: 30px; text-align: center; }
-       
+      
         .success { background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin: 15px 0; display: none; border: 1px solid #c3e6cb; }
         .location-status { background: #d1ecf1; color: #0c5460; padding: 12px; border-radius: 8px; margin: 10px 0; display: none; border: 1px solid #bee5eb; }
         .error { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin: 15px 0; display: none; border: 1px solid #f5c6cb; }
-       
-        .status-info { 
-            background: #e7f3ff; 
-            color: #0c5460; 
-            padding: 10px; 
-            border-radius: 8px; 
-            margin: 10px 0; 
+      
+        .status-info {
+            background: #e7f3ff;
+            color: #0c5460;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
             border: 1px solid #b8daff;
             text-align: center;
             font-size: 0.9rem;
         }
-       
+      
         @media (max-width: 768px) {
             .hero h1 { font-size: 1.7rem; }
+            .btn-keldi, .btn-ketdi { width: 100%; margin-bottom: 10px; }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -77,22 +82,22 @@
     <div class="container">
         <div class="card">
             <h2><i class="fas fa-user-check"></i> Ходим Маълумотлари</h2>
-           
+          
             <div class="status-info">
-                <i class="fas fa-info-circle"></i> 
+                <i class="fas fa-info-circle"></i>
                 Тизим Telegram гуруҳига хабар юборади
             </div>
-           
+          
             <div class="form-group">
                 <label>Ходим Ф.И.Ш. *</label>
                 <input type="text" class="form-control" id="employeeName" placeholder="Ходим Ф.И.Ш.ни киритинг" required>
             </div>
-           
+          
             <div class="form-group">
                 <label>Лавозими *</label>
                 <input type="text" class="form-control" id="employeePosition" placeholder="Лавозимини киритинг (мисол: Ҳамшира, Шифокор)" required>
             </div>
-           
+          
             <div class="form-group">
                 <label>Жойлашув *</label>
                 <button type="button" class="btn btn-location" onclick="getLocation()">
@@ -102,15 +107,21 @@
                     <i class="fas fa-check-circle"></i> Жойлашув муваффақиятли қабул қилинди!
                 </div>
             </div>
-           
-            <button class="btn btn-submit" onclick="saveAttendance()">
-                <i class="fas fa-paper-plane"></i> Telegramга Юбориш
+          
+            <button class="btn btn-keldi" onclick="saveAttendance('keldi')">
+                <i class="fas fa-sign-in-alt"></i> КелДИ
             </button>
-           
+            <button class="btn btn-ketdi" onclick="saveAttendance('ketdi')">
+                <i class="fas fa-sign-out-alt"></i> КетДИ
+            </button>
+            <button class="btn btn-view-exit" onclick="viewLastExit()">
+                <i class="fas fa-clock"></i> Охирги Кетишни Кўриш
+            </button>
+          
             <div class="success" id="successMessage">
                 <i class="fas fa-check-circle"></i> Маълумотлар Telegram гуруҳига муваффақиятли юборилди!
             </div>
-           
+          
             <div class="error" id="errorMessage">
                 <i class="fas fa-exclamation-circle"></i> Маълумотларни юборишда хатолик юз берди!
             </div>
@@ -123,11 +134,19 @@
     </footer>
     <script>
         let userLocation = null;
-        
+       
         // Telegram бот конфигурацияси
         const BOT_TOKEN = '8524124275:AAGs_yIOlD2INhLw0SitQGwFvnISZXjbeBM';
         const CHAT_ID = '-1003066440730';
-       
+      
+        // localStorage дан маълумотларни юклаш
+        window.onload = function() {
+            const savedName = localStorage.getItem('employeeName');
+            const savedPosition = localStorage.getItem('employeePosition');
+            if (savedName) document.getElementById('employeeName').value = savedName;
+            if (savedPosition) document.getElementById('employeePosition').value = savedPosition;
+        };
+      
         function getLocation() {
             if (!navigator.geolocation) {
                 alert("❌ Браузерингиз жойлашувни қўллаб-қувватламайди");
@@ -139,10 +158,10 @@
             locationBtn.disabled = true;
             navigator.geolocation.getCurrentPosition(
                 function(position) {
-                    userLocation = { 
-                        latitude: position.coords.latitude, 
-                        longitude: position.coords.longitude, 
-                        accuracy: position.coords.accuracy 
+                    userLocation = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        accuracy: position.coords.accuracy
                     };
                     document.getElementById('locationStatus').style.display = 'block';
                     locationBtn.innerHTML = '<i class="fas fa-check-circle"></i> Жойлашув Олинди';
@@ -165,7 +184,6 @@
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
             );
         }
-
         async function sendTelegramMessage(message) {
             const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
@@ -180,13 +198,12 @@
             const data = await response.json();
             if (!data.ok) throw new Error(data.description || 'Номаълум хатолик');
         }
-
-        function saveAttendance() {
+        function saveAttendance(type) { // 'keldi' yoki 'ketdi'
             document.getElementById('successMessage').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'none';
             const employeeName = document.getElementById('employeeName').value.trim();
             const employeePosition = document.getElementById('employeePosition').value.trim();
-           
+          
             if(!employeeName || !employeePosition) {
                 alert('❌ Илтимос, барча майдонларни тўлдиринг!');
                 return;
@@ -195,34 +212,40 @@
                 alert('❌ Илтимос, аввал жойлашувни олинг!');
                 return;
             }
-            const submitBtn = document.querySelector('.btn-submit');
+            // localStorage га сақлаш
+            localStorage.setItem('employeeName', employeeName);
+            localStorage.setItem('employeePosition', employeePosition);
+          
+            const submitBtn = document.querySelector(type === 'keldi' ? '.btn-keldi' : '.btn-ketdi');
             const originalBtnText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Юборилмоқда...';
             submitBtn.disabled = true;
-           
+          
             const locationLink = `https://www.google.com/maps?q=${userLocation.latitude},${userLocation.longitude}`;
             const locationText = `📍 Жойлашув: ${userLocation.latitude.toFixed(6)}, ${userLocation.longitude.toFixed(6)}`;
-           
+          
             const now = new Date();
             const dateStr = now.toLocaleDateString('uz-UZ', { year: 'numeric', month: 'long', day: 'numeric' });
             const timeStr = now.toLocaleTimeString('uz-UZ');
-           
+            const actionEmoji = type === 'keldi' ? '🟢 КЕЛДИ' : '🔴 КЕТДИ';
+          
             const message = `👤 <b>ЯНГИ ХОДИМ МАЪЛУМОТЛАРИ</b>
-
+${actionEmoji}
 📋 <b>Ходим Ф.И.Ш.:</b> ${employeeName}
 💼 <b>Лавозими:</b> ${employeePosition}
-
 🗺️ ${locationText}
 🔗 <b>Харита:</b> ${locationLink}
-
 📅 <b>Сана:</b> ${dateStr}
 ⏰ <b>Вақт:</b> ${timeStr}
-
-#keldi_ketdi #${employeePosition.replace(/\s+/g, '_')}`;
-
+#keldi_ketdi #${employeePosition.replace(/\s+/g, '_')} #${type}`;
+          
             sendTelegramMessage(message)
             .then(() => {
                 showSuccessMessage();
+                // Ketdi ҳолатида сана ва вақтни сақлаш
+                if (type === 'ketdi') {
+                    localStorage.setItem('lastExit', JSON.stringify({ date: dateStr, time: timeStr, name: employeeName }));
+                }
                 userLocation = null;
                 document.getElementById('locationStatus').style.display = 'none';
                 const locationBtn = document.querySelector('.btn-location');
@@ -240,15 +263,20 @@
                 submitBtn.disabled = false;
             });
         }
-
+        function viewLastExit() {
+            const lastExit = localStorage.getItem('lastExit');
+            if (!lastExit) {
+                alert('❌ Охирги кетиш маълумоти йўқ. Аввал "Кетди" тугмасини босинг!');
+                return;
+            }
+            const data = JSON.parse(lastExit);
+            alert(`🔴 Охирги кетиш:\nХодим: ${data.name}\nСана: ${data.date}\nВақт: ${data.time}`);
+        }
         function showSuccessMessage() {
             document.getElementById('successMessage').style.display = 'block';
-            document.getElementById('employeeName').value = '';
-            document.getElementById('employeePosition').value = '';
             setTimeout(() => document.getElementById('successMessage').style.display = 'none', 5000);
         }
-
-        console.log('Keldi-Ketdi Tizimi юкланди');
+        console.log('Keldi-Ketdi Tizimi юкланди (Keldi-Ketdi versiyasi)');
         console.log('Telegram бот: ' + BOT_TOKEN);
         console.log('Гуруҳ ID: ' + CHAT_ID);
     </script>
