@@ -31,9 +31,8 @@
         .btn { background: #2E86DE; color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; transition: background 0.3s; margin: 5px; }
         .btn:hover { background: #1a6fc6; }
         .btn:disabled { background: #6c757d; cursor: not-allowed; }
-        .btn-location { background: #FF9F43; width: 100%; border: 2px solid #FF9F43; }
+        .btn-location { background: #FF9F43; width: 100%; }
         .btn-location:hover { background: #FF8C29; }
-        .btn-location.invalid { border-color: #dc3545; background: #f8d7da; color: #721c24; }
         .btn-keldi { background: #10AC84; width: 48%; margin-top: 10px; }
         .btn-keldi:hover { background: #0D8C6B; }
         .btn-ketdi { background: #FF6B6B; width: 48%; margin-top: 10px; }
@@ -101,7 +100,7 @@
           
             <div class="form-group">
                 <label>Жойлашув *</label>
-                <button type="button" class="btn btn-location" id="locationBtn" onclick="getLocation()">
+                <button type="button" class="btn btn-location" onclick="getLocation()">
                     <i class="fas fa-map-marker-alt"></i> Жойлашувни Олиш
                 </button>
                 <div class="location-status" id="locationStatus">
@@ -136,39 +135,27 @@
     <script>
         let userLocation = null;
        
-        // Telegram бот конфигурацияси
-        const BOT_TOKEN = '8524124275:AAGs_yIOlD2INhLw0SitQGwFvnISZXjbeBM';
+        // Telegram бот конфигурацияси (XAVFSIZLIK UCHUN: Bu qismni serverga o'tkazing!)
+        const BOT_TOKEN = '8524124275:AAGs_yIOlD2INhLw0SitQGwFvnISZXjbeBM'; // ⚠️ Ogohlantirish: Token ni yashiring!
         const CHAT_ID = '-1003066440730';
       
-        // localStorage дан маълумотларни юклаш
+        // localStorage dan ma'lumotlarni yuklash
         window.onload = function() {
             const savedName = localStorage.getItem('employeeName');
             const savedPosition = localStorage.getItem('employeePosition');
             if (savedName) document.getElementById('employeeName').value = savedName;
             if (savedPosition) document.getElementById('employeePosition').value = savedPosition;
-            // Жойлашув тугмасини текшириш учун
-            checkLocationValidity();
         };
-      
-        function checkLocationValidity() {
-            const locationBtn = document.getElementById('locationBtn');
-            if (!userLocation) {
-                locationBtn.classList.add('invalid');
-            } else {
-                locationBtn.classList.remove('invalid');
-            }
-        }
       
         function getLocation() {
             if (!navigator.geolocation) {
                 alert("❌ Браузерингиз жойлашувни қўллаб-қувватламайди");
                 return;
             }
-            const locationBtn = document.getElementById('locationBtn');
+            const locationBtn = document.querySelector('.btn-location');
             const originalText = locationBtn.innerHTML;
             locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Жойлашув олинмоқда...';
             locationBtn.disabled = true;
-            locationBtn.classList.remove('invalid');
             navigator.geolocation.getCurrentPosition(
                 function(position) {
                     userLocation = {
@@ -180,7 +167,6 @@
                     locationBtn.innerHTML = '<i class="fas fa-check-circle"></i> Жойлашув Олинди';
                     locationBtn.style.background = '#10AC84';
                     console.log('Жойлашув олинди:', userLocation);
-                    checkLocationValidity(); // Текширишни янгилаш
                 },
                 function(error) {
                     let errorMessage = "❌ Жойлашувни олишда хатолик: ";
@@ -194,11 +180,11 @@
                     locationBtn.innerHTML = originalText;
                     locationBtn.disabled = false;
                     locationBtn.style.background = '#FF9F43';
-                    checkLocationValidity(); // Қизил рамкани қайтариш
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
             );
         }
+      
         async function sendTelegramMessage(message) {
             const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
@@ -213,6 +199,7 @@
             const data = await response.json();
             if (!data.ok) throw new Error(data.description || 'Номаълум хатолик');
         }
+      
         function saveAttendance(type) { // 'keldi' yoki 'ketdi'
             document.getElementById('successMessage').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'none';
@@ -225,10 +212,9 @@
             }
             if (!userLocation) {
                 alert('❌ Илтимос, аввал жойлашувни олинг!');
-                checkLocationValidity(); // Қизил рамкани кўрсатиш
                 return;
             }
-            // localStorage га сақлаш
+            // localStorage ga saqlash
             localStorage.setItem('employeeName', employeeName);
             localStorage.setItem('employeePosition', employeePosition);
           
@@ -258,17 +244,16 @@ ${actionEmoji}
             sendTelegramMessage(message)
             .then(() => {
                 showSuccessMessage();
-                // Ketdi ҳолатида сана ва вақтни сақлаш
+                // Ketdi holatida sana va vaqtni saqlash
                 if (type === 'ketdi') {
                     localStorage.setItem('lastExit', JSON.stringify({ date: dateStr, time: timeStr, name: employeeName }));
                 }
                 userLocation = null;
                 document.getElementById('locationStatus').style.display = 'none';
-                const locationBtn = document.getElementById('locationBtn');
+                const locationBtn = document.querySelector('.btn-location');
                 locationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> Жойлашувни Олиш';
                 locationBtn.style.background = '#FF9F43';
                 locationBtn.disabled = false;
-                checkLocationValidity(); // Қизил рамкани қайтариш
             })
             .catch(error => {
                 console.error('Хатолик:', error);
@@ -280,6 +265,7 @@ ${actionEmoji}
                 submitBtn.disabled = false;
             });
         }
+      
         function viewLastExit() {
             const lastExit = localStorage.getItem('lastExit');
             if (!lastExit) {
@@ -289,13 +275,14 @@ ${actionEmoji}
             const data = JSON.parse(lastExit);
             alert(`🔴 Охирги кетиш:\nХодим: ${data.name}\nСана: ${data.date}\nВақт: ${data.time}`);
         }
+      
         function showSuccessMessage() {
             document.getElementById('successMessage').style.display = 'block';
             setTimeout(() => document.getElementById('successMessage').style.display = 'none', 5000);
         }
-        console.log('Keldi-Ketdi Tizimi юкланди (Визуал валидация билан)');
-        console.log('Telegram бот: ' + BOT_TOKEN);
-        console.log('Гуруҳ ID: ' + CHAT_ID);
+      
+        console.log('Keldi-Ketdi Tizimi юкланди (Yangilangan versiya - Oxirgi ketish bilan)');
+        console.log('⚠️ Token va Chat ID ni xavfsiz saqlang!');
     </script>
 </body>
 </html>
