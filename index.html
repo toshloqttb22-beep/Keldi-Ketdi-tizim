@@ -31,8 +31,9 @@
         .btn { background: #2E86DE; color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; transition: background 0.3s; margin: 5px; }
         .btn:hover { background: #1a6fc6; }
         .btn:disabled { background: #6c757d; cursor: not-allowed; }
-        .btn-location { background: #FF9F43; width: 100%; }
+        .btn-location { background: #FF9F43; width: 100%; border: 2px solid #FF9F43; }
         .btn-location:hover { background: #FF8C29; }
+        .btn-location.invalid { border-color: #dc3545; background: #f8d7da; color: #721c24; }
         .btn-keldi { background: #10AC84; width: 48%; margin-top: 10px; }
         .btn-keldi:hover { background: #0D8C6B; }
         .btn-ketdi { background: #FF6B6B; width: 48%; margin-top: 10px; }
@@ -100,7 +101,7 @@
           
             <div class="form-group">
                 <label>Жойлашув *</label>
-                <button type="button" class="btn btn-location" onclick="getLocation()">
+                <button type="button" class="btn btn-location" id="locationBtn" onclick="getLocation()">
                     <i class="fas fa-map-marker-alt"></i> Жойлашувни Олиш
                 </button>
                 <div class="location-status" id="locationStatus">
@@ -145,17 +146,29 @@
             const savedPosition = localStorage.getItem('employeePosition');
             if (savedName) document.getElementById('employeeName').value = savedName;
             if (savedPosition) document.getElementById('employeePosition').value = savedPosition;
+            // Жойлашув тугмасини текшириш учун
+            checkLocationValidity();
         };
+      
+        function checkLocationValidity() {
+            const locationBtn = document.getElementById('locationBtn');
+            if (!userLocation) {
+                locationBtn.classList.add('invalid');
+            } else {
+                locationBtn.classList.remove('invalid');
+            }
+        }
       
         function getLocation() {
             if (!navigator.geolocation) {
                 alert("❌ Браузерингиз жойлашувни қўллаб-қувватламайди");
                 return;
             }
-            const locationBtn = document.querySelector('.btn-location');
+            const locationBtn = document.getElementById('locationBtn');
             const originalText = locationBtn.innerHTML;
             locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Жойлашув олинмоқда...';
             locationBtn.disabled = true;
+            locationBtn.classList.remove('invalid');
             navigator.geolocation.getCurrentPosition(
                 function(position) {
                     userLocation = {
@@ -167,6 +180,7 @@
                     locationBtn.innerHTML = '<i class="fas fa-check-circle"></i> Жойлашув Олинди';
                     locationBtn.style.background = '#10AC84';
                     console.log('Жойлашув олинди:', userLocation);
+                    checkLocationValidity(); // Текширишни янгилаш
                 },
                 function(error) {
                     let errorMessage = "❌ Жойлашувни олишда хатолик: ";
@@ -180,6 +194,7 @@
                     locationBtn.innerHTML = originalText;
                     locationBtn.disabled = false;
                     locationBtn.style.background = '#FF9F43';
+                    checkLocationValidity(); // Қизил рамкани қайтариш
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
             );
@@ -210,6 +225,7 @@
             }
             if (!userLocation) {
                 alert('❌ Илтимос, аввал жойлашувни олинг!');
+                checkLocationValidity(); // Қизил рамкани кўрсатиш
                 return;
             }
             // localStorage га сақлаш
@@ -248,10 +264,11 @@ ${actionEmoji}
                 }
                 userLocation = null;
                 document.getElementById('locationStatus').style.display = 'none';
-                const locationBtn = document.querySelector('.btn-location');
+                const locationBtn = document.getElementById('locationBtn');
                 locationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> Жойлашувни Олиш';
                 locationBtn.style.background = '#FF9F43';
                 locationBtn.disabled = false;
+                checkLocationValidity(); // Қизил рамкани қайтариш
             })
             .catch(error => {
                 console.error('Хатолик:', error);
@@ -276,7 +293,7 @@ ${actionEmoji}
             document.getElementById('successMessage').style.display = 'block';
             setTimeout(() => document.getElementById('successMessage').style.display = 'none', 5000);
         }
-        console.log('Keldi-Ketdi Tizimi юкланди (Keldi-Ketdi versiyasi)');
+        console.log('Keldi-Ketdi Tizimi юкланди (Визуал валидация билан)');
         console.log('Telegram бот: ' + BOT_TOKEN);
         console.log('Гуруҳ ID: ' + CHAT_ID);
     </script>
